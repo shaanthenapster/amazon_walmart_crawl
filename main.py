@@ -1,16 +1,20 @@
-# This is a sample Python script.
+from bs4 import BeautifulSoup
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+def render_data():
+    with open('test2.html') as html_file:
+        soup = BeautifulSoup(html_file, 'html.parser')
+        book_info = {}
+        for item in soup.find('div', {'id': 'detailBullets_feature_div'}).find_all('li'):
+            try:
+                key = item.text.split(':')[0].strip()
+                value = item.text.split(':')[1].strip()
+                book_info[key] = value
+            except IndexError:
+                print(f"Error: {item.text} does not have a value.")
 
+        for keys, values in book_info.items():
+            print(keys, values)
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    render_data()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
