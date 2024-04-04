@@ -67,7 +67,9 @@ def fetch_html_data():
     for urls in links:
         url = 'https://api.crawlbase.com/?token=lrnHZ2r3ZkaBWJcIA_W9oQ&url=' + urls
         responses = requests.get(str(url))
-        book_info.append(render_data(responses))
+        product_info = render_data(responses)
+        product_info['url'] = url  # Add URL to product info
+        book_info.append(product_info)
     return book_info
 
 
@@ -87,10 +89,12 @@ def render_data(values):
     return book_info
 
 
-def write_csv(data, filename='book_info.csv'):
+def write_csv(data, filename='book_info_100.csv'):
     if data:
         # Extract field names from the data
         fieldnames = set().union(*(d.keys() for d in data))
+        # Add 'url' field to the fieldnames
+        fieldnames.add('url')
         with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
